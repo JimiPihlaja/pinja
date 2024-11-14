@@ -1,8 +1,9 @@
 
-import React from 'react';
+import React, { useState } from 'react';
+import './ConsultantList.css';
 
-// data for consultants
 const consultants = [
+  // Konsulttidata
   {
     id: 1,
     name: "Matti Meikäläinen",
@@ -67,7 +68,7 @@ const consultants = [
     id: 5,
     name: "Pekka Saarinen",
     education: {
-      degree: "Liiketalous",
+      degree: "FM",
       program: "Tietojenkäsittelytiede",
       graduationYear: 2020
     },
@@ -78,41 +79,79 @@ const consultants = [
     ],
     workExperience: { startYear: 2020 }
   }
+  
 ];
 
 const ConsultantList = () => {
-  return (
-    <div>
-      <h1>Consultant List</h1>
-      {consultants.map((consultant) => (
-        <div key={consultant.id} style={{ border: "1px solid #ccc", padding: "10px", marginBottom: "10px" }}>
-          <h2>{consultant.name}</h2>
-          <p><strong>Koulutusaste:</strong> {consultant.education.degree}</p>
-          <p><strong>Koulutusohjelma:</strong> {consultant.education.program}</p>
-          <p><strong>Valmistumisvuosi:</strong> {consultant.education.graduationYear}</p>
-          
-          <h3>Suoritetut sertifikaatit ja kurssit:</h3>
-          <ul>
-            {consultant.certifications.map((cert, index) => (
-              <li key={index}>{cert}</li>
-            ))}
-          </ul>
-          
-          <h3>Projekti- ja teknologiakokemus:</h3>
-          <ul>
-            {consultant.projects.map((project, index) => (
-              <li key={index}>
-                <strong>Projekti:</strong> {project.name}, 
-                <strong> Teknologiat:</strong> {project.technologies.join(", ")}, 
-                <strong> Kokemusvuodet:</strong> {project.yearsOfExperience}
-              </li>
-            ))}
-          </ul>
+  const [searchTerm, setSearchTerm] = useState('');
+  const [experienceFilter, setExperienceFilter] = useState('');
 
-          <p><strong>Työkokemuksen aloitusvuosi:</strong> {consultant.workExperience.startYear}</p>
-          <p><strong>Työkokemuksen kesto:</strong> {new Date().getFullYear() - consultant.workExperience.startYear} vuotta</p>
-        </div>
-      ))}
+  const filteredConsultants = consultants.filter((consultant) => {
+    const experienceYears = new Date().getFullYear() - consultant.workExperience.startYear;
+    const matchesEducation = consultant.education.program
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const matchesExperience =
+      experienceFilter === '' || experienceYears >= parseInt(experienceFilter);
+
+    return matchesEducation && matchesExperience;
+  });
+
+  return (
+    <div className="container">
+      <h2 className="heading">Our Consultants</h2>
+      
+      <div className="searchContainer">
+        <input
+          type="text"
+          placeholder="Hae koulutusohjelman mukaan"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="input"
+        />
+        
+        <input
+          type="number"
+          placeholder="Vähintään työkokemuksen vuodet"
+          value={experienceFilter}
+          onChange={(e) => setExperienceFilter(e.target.value)}
+          className="input"
+        />
+      </div>
+
+      {filteredConsultants.length > 0 ? (
+        filteredConsultants.map((consultant) => (
+          <div key={consultant.id} className="card">
+            <h3 className="consultantName">{consultant.name}</h3>
+            <p><strong>Koulutusaste:</strong> {consultant.education.degree}</p>
+            <p><strong>Koulutusohjelma:</strong> {consultant.education.program}</p>
+            <p><strong>Valmistumisvuosi:</strong> {consultant.education.graduationYear}</p>
+            
+            <h4>Suoritetut sertifikaatit ja kurssit:</h4>
+            <ul className='noBullets'>
+              {consultant.certifications.map((cert, index) => (
+                <li key={index}>{cert}</li>
+              ))}
+            </ul>
+            
+            <h4>Projekti- ja teknologiakokemus:</h4>
+            <ul className='noBullets'>
+              {consultant.projects.map((project, index) => (
+                <li key={index}>
+                  <strong>Projekti:</strong> {project.name}, 
+                  <strong> Teknologiat:</strong> {project.technologies.join(", ")}, 
+                  <strong> Kokemusvuodet:</strong> {project.yearsOfExperience}
+                </li>
+              ))}
+            </ul>
+
+            <p><strong>Työkokemuksen aloitusvuosi:</strong> {consultant.workExperience.startYear}</p>
+            <p><strong>Työkokemuksen kesto:</strong> {new Date().getFullYear() - consultant.workExperience.startYear} vuotta</p>
+          </div>
+        ))
+      ) : (
+        <p className="noResults">Ei hakuehtoja vastaavia tuloksia.</p>
+      )}
     </div>
   );
 };
