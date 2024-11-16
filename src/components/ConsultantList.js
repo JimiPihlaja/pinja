@@ -1,9 +1,8 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import ConsultantEditForm from './ConsultantEditForm';
 import './ConsultantList.css';
 
-const consultants = [
-  // Konsulttidata
+const initialConsultants = [
   {
     id: 1,
     name: "Matti Meikäläinen",
@@ -79,61 +78,60 @@ const consultants = [
     ],
     workExperience: { startYear: 2020 }
   }
-  
 ];
 
 const ConsultantList = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [experienceFilter, setExperienceFilter] = useState('');
-
-  const filteredConsultants = consultants.filter((consultant) => {
-    const experienceYears = new Date().getFullYear() - consultant.workExperience.startYear;
-    const matchesEducation = consultant.education.program
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-    const matchesExperience =
-      experienceFilter === '' || experienceYears >= parseInt(experienceFilter);
-
-    return matchesEducation && matchesExperience;
+  const [consultants, setConsultants] = useState(() => {
+    const savedData = localStorage.getItem('consultants');
+    return savedData ? JSON.parse(savedData) : initialConsultants;
   });
+
+  const [editingConsultant, setEditingConsultant] = useState(null);
+
+  useEffect(() => {
+    localStorage.setItem('consultants', JSON.stringify(consultants));
+  }, [consultants]);
+
+  const handleEdit = (consultant) => {
+    setEditingConsultant(consultant);
+  };
+
+  const handleSave = (updatedConsultant) => {
+    setConsultants((prevConsultants) =>
+      prevConsultants.map((consultant) =>
+        consultant.id === updatedConsultant.id ? updatedConsultant : consultant
+      )
+    );
+    setEditingConsultant(null);
+  };
+
+  const handleCancel = () => {
+    setEditingConsultant(null);
+  };
 
   return (
     <div className="container">
       <h2 className="heading">Our Consultants</h2>
-      
-      <div className="searchContainer">
-        <input
-          type="text"
-          placeholder="Hae koulutusohjelman mukaan"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="input"
-        />
-        
-        <input
-          type="number"
-          placeholder="Vähintään työkokemuksen vuodet"
-          value={experienceFilter}
-          onChange={(e) => setExperienceFilter(e.target.value)}
-          className="input"
-        />
-      </div>
 
-      {filteredConsultants.length > 0 ? (
-        filteredConsultants.map((consultant) => (
+      {editingConsultant ? (
+        <ConsultantEditForm
+          consultant={editingConsultant}
+          onSave={handleSave}
+          onCancel={handleCancel}
+        />
+      ) : (
+        consultants.map((consultant) => (
           <div key={consultant.id} className="card">
             <h3 className="consultantName">{consultant.name}</h3>
             <p><strong>Koulutusaste:</strong> {consultant.education.degree}</p>
             <p><strong>Koulutusohjelma:</strong> {consultant.education.program}</p>
             <p><strong>Valmistumisvuosi:</strong> {consultant.education.graduationYear}</p>
-            
             <h4>Suoritetut sertifikaatit ja kurssit:</h4>
             <ul className='noBullets'>
               {consultant.certifications.map((cert, index) => (
                 <li key={index}>{cert}</li>
               ))}
             </ul>
-            
             <h4>Projekti- ja teknologiakokemus:</h4>
             <ul className='noBullets'>
               {consultant.projects.map((project, index) => (
@@ -144,13 +142,11 @@ const ConsultantList = () => {
                 </li>
               ))}
             </ul>
-
             <p><strong>Työkokemuksen aloitusvuosi:</strong> {consultant.workExperience.startYear}</p>
             <p><strong>Työkokemuksen kesto:</strong> {new Date().getFullYear() - consultant.workExperience.startYear} vuotta</p>
+            <button onClick={() => handleEdit(consultant)}>Muokkaa</button>
           </div>
         ))
-      ) : (
-        <p className="noResults">Ei hakuehtoja vastaavia tuloksia.</p>
       )}
     </div>
   );
