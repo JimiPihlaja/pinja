@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './ConsultantEditForm';
+import './ConsultantEditForms.css';
 
 const ConsultantEditForm = ({ consultant, onSave, onCancel }) => {
   const [formData, setFormData] = useState({ ...consultant });

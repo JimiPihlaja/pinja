@@ -144,7 +144,9 @@ const ConsultantList = () => {
             </ul>
             <p><strong>Työkokemuksen aloitusvuosi:</strong> {consultant.workExperience.startYear}</p>
             <p><strong>Työkokemuksen kesto:</strong> {new Date().getFullYear() - consultant.workExperience.startYear} vuotta</p>
-            <button onClick={() => handleEdit(consultant)}>Muokkaa</button>
+            <button className="edit-button" onClick={() => handleEdit(consultant)}>
+  Muokkaa
+</button>
           </div>
         ))
       )}
