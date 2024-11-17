@@ -5,27 +5,14 @@
     text-align: center;
   }
   
-  .title {
-    margin: 0;
-    font-size: 40px; 
-    font-weight: 800; 
-    text-transform: uppercase; 
-    color: white; 
-    letter-spacing: 3px; 
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); 
-    transition: color 0.3s ease-in-out, transform 0.3s ease; 
-  }
   
-  .title:hover {
-    color: black; 
-    transform: scale(1.05); 
-  }
   
   .nav {
     margin-top: 20px;
     display: flex;
     justify-content: center; 
     gap: 20px; 
+    
   }
   
   .navLink {
@@ -35,6 +22,7 @@
     font-size: 18px; 
     text-transform: uppercase; 
     padding: 10px 20px;
+    border: 1px solid white;
     border-radius: 20px; 
     transition: background-color 0.3s ease, transform 0.3s ease-in-out; 
   }
@@ -47,5 +35,11 @@
   
   .navLink:active {
     transform: scale(1.05); 
+  }
+  .logo{
+    height: 60px;
+    width: auto;
+  align-items: center;
+  margin-top: 0px;
   }
   
