@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ConsultantEditForm from './ConsultantEditForm';
 import './ConsultantList.css';
+import SearchBar from './SearchBar';
 
 const initialConsultants = [
   {
@@ -87,10 +88,35 @@ const ConsultantList = () => {
   });
 
   const [editingConsultant, setEditingConsultant] = useState(null);
+  const [filteredConsultants, setFilteredConsultants] = useState(consultants);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [experienceFilter, setExperienceFilter] = useState('');
 
   useEffect(() => {
     localStorage.setItem('consultants', JSON.stringify(consultants));
   }, [consultants]);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (!searchTerm && !experienceFilter) {
+        setFilteredConsultants(initialConsultants);
+        return;
+      }
+
+      const filtered = consultants.filter((consultant) => {
+        const experienceYears = new Date().getFullYear() - consultant.workExperience.startYear;
+        const matchesEducation = !searchTerm || consultant.education.program
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
+        const matchesExperience = !experienceFilter || experienceYears >= parseInt(experienceFilter, 10);
+
+        return matchesEducation && matchesExperience;
+      });
+      setFilteredConsultants(filtered);
+    }, 300); // 300 ms debounce
+
+    return () => clearTimeout(timeoutId);
+  }, [searchTerm, experienceFilter, consultants]);
 
   const handleEdit = (consultant) => {
     setEditingConsultant(consultant);
@@ -113,14 +139,22 @@ const ConsultantList = () => {
     <div className="container">
       <h2 className="heading">Our Consultants</h2>
 
+      <SearchBar
+       searchTerm={searchTerm}
+       setSearchTerm={setSearchTerm}
+       experienceFilter={experienceFilter}
+       setExperienceFilter={setExperienceFilter}
+       />
+
       {editingConsultant ? (
         <ConsultantEditForm
           consultant={editingConsultant}
           onSave={handleSave}
           onCancel={handleCancel}
         />
-      ) : (
-        consultants.map((consultant) => (
+      ) : 
+        filteredConsultants.length > 0 ? (
+        filteredConsultants.map((consultant) => (
           <div key={consultant.id} className="card">
             <h3 className="consultantName">{consultant.name}</h3>
             <p><strong>Koulutusaste:</strong> {consultant.education.degree}</p>
@@ -149,9 +183,10 @@ const ConsultantList = () => {
 </button>
           </div>
         ))
-      )}
-    </div>
+        ): (
+          <p className="noResults">Ei hakuehtoja vastaavia tuloksia.</p>
+        )}
+  </div>
   );
 };
-
-export default ConsultantList;
+  export default ConsultantList;
