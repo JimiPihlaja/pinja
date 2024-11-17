@@ -137,7 +137,7 @@ const ConsultantList = () => {
 
   return (
     <div className="container">
-      <h2 className="heading">Our Consultants</h2>
+      <h2 className="heading">Meidän Konsulttimme</h2>
 
       <SearchBar
        searchTerm={searchTerm}

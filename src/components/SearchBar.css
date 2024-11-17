@@ -1,13 +1,35 @@
 .searchContainer {
-    display: inline-block;
-    gap: 10px;
-    margin-bottom: 20px;
-   
+    display: flex; /* Muutettu inline-blockista flexboxiin */
+    justify-content: center; /* Keskittää elementit */
+    align-items: center; 
+    gap: 15px;
+    margin-bottom: 30px; 
   }
   
   .input {
-    flex: 1;
-    padding: 10px;
-    border: 10px solid #e30059;
-    border-radius: 100px;
+    padding: 12px 20px; 
+    font-size: 16px;
+    border: 2px solid #e30059; 
+    border-radius: 50px; 
+    transition: all 0.3s ease;
+    width: 300px; 
+    box-sizing: border-box; 
   }
+  
+  .input:focus {
+    outline: none; 
+    border-color: #e30059; 
+    box-shadow: 0 0 8px rgba(227, 0, 89, 0.5); 
+  }
+  
+  @media (max-width: 600px) {
+    .searchContainer {
+      flex-direction: column; /* Yksi alla toisen sijaan pienillä näytöillä */
+      align-items: stretch; /* Venyttää elementtejä koko leveydelle */
+    }
+  
+    .input {
+      width: 100%; 
+    }
+  }
+  

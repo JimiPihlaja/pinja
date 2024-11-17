@@ -4,12 +4,6 @@
     margin: 0 auto;
   }
   
-  .heading {
-    text-align: center;
-    color: #333;
-    margin-bottom: 20px;
-  }
-  
   .searchContainer {
     display: flex;
     gap: 10px;
@@ -44,4 +38,26 @@
   list-style-type: none;
   padding: 0;
 }
-  
+.heading {
+  color: #e30059; 
+  font-style: italic; 
+  font-weight: 900; 
+  font-size: 36px; 
+  text-transform: uppercase; 
+  letter-spacing: 2px; 
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); 
+  line-height: 1.2; 
+  transition: all 0.3s ease; 
+  margin-bottom: 3%;
+}
+
+.heading:hover {
+  color: black; 
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3); 
+  transform: scale(1.05); 
+}
+
+.heading:focus {
+  outline: none; 
+  border-bottom: 3px solid #e30059; 
+}

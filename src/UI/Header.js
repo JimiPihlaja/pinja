@@ -7,9 +7,9 @@ const Header = () => {
     <header className="header">
       <h1 className="title">Pinja Konsulttidata</h1>
       <nav className="nav">
-        <a href="#home" className="navLink">Home</a>
-        <a href="#consultants" className="navLink">Consultants</a>
-        <a href="#contact" className="navLink">Contact</a>
+        <a href="#home" className="navLink">Etusivu</a>
+        <a href="#consultants" className="navLink">Konsultit</a>
+        <a href="#contact" className="navLink">Yhteystiedot</a>
       </nav>
     </header>
   );
