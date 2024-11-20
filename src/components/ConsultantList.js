@@ -17,7 +17,8 @@ const initialConsultants = [
       { name: "Web App Development", technologies: ["React", "Node.js"], yearsOfExperience: 3 },
       { name: "Mobile App Development", technologies: ["React Native", "Firebase"], yearsOfExperience: 2 }
     ],
-    workExperience: { startYear: 2018 }
+    workExperience: { startYear: 2018 },
+    imageUrl: "/CVkuvat/template1.jpg"
   },
   {
     id: 2,
@@ -156,6 +157,11 @@ const ConsultantList = () => {
         filteredConsultants.length > 0 ? (
         filteredConsultants.map((consultant) => (
           <div key={consultant.id} className="card">
+            <img
+              src={consultant.imageUrl} 
+              alt={`${consultant.name} kuva`} 
+              className="consultant-image" 
+            />
             <h3 className="consultantName">{consultant.name}</h3>
             <p><strong>Koulutusaste:</strong> {consultant.education.degree}</p>
             <p><strong>Koulutusohjelma:</strong> {consultant.education.program}</p>

@@ -24,6 +24,13 @@
   border-color: #e30059; /* Reunan väri muuttuu, kun kenttä on fokusoitu */
   outline: none; /* Poistaa oletuskehykset */
 }
+.consultant-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
 
 .card {
   border: 1px solid #ddd;
