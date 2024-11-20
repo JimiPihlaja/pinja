@@ -85,7 +85,6 @@ const initialConsultants = [
     imageUrl: "/CVkuvat/template4.jpg"
   }
 ];
-
 const ConsultantList = () => {
   const [consultants, setConsultants] = useState(() => {
     const savedData = localStorage.getItem('consultants');
@@ -96,6 +95,7 @@ const ConsultantList = () => {
   const [filteredConsultants, setFilteredConsultants] = useState(consultants);
   const [searchTerm, setSearchTerm] = useState('');
   const [experienceFilter, setExperienceFilter] = useState('');
+  const [expandedConsultants, setExpandedConsultants] = useState([]);
 
   useEffect(() => {
     localStorage.setItem('consultants', JSON.stringify(consultants));
@@ -140,16 +140,22 @@ const ConsultantList = () => {
     setEditingConsultant(null);
   };
 
+  const toggleExpand = (id) => {
+    setExpandedConsultants((prev) =>
+      prev.includes(id) ? prev.filter((consultantId) => consultantId !== id) : [...prev, id]
+    );
+  };
+
   return (
     <div className="container">
       <h2 className="heading">Meidän Konsulttimme</h2>
 
       <SearchBar
-       searchTerm={searchTerm}
-       setSearchTerm={setSearchTerm}
-       experienceFilter={experienceFilter}
-       setExperienceFilter={setExperienceFilter}
-       />
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        experienceFilter={experienceFilter}
+        setExperienceFilter={setExperienceFilter}
+      />
 
       {editingConsultant ? (
         <ConsultantEditForm
@@ -157,46 +163,61 @@ const ConsultantList = () => {
           onSave={handleSave}
           onCancel={handleCancel}
         />
-      ) : 
-        filteredConsultants.length > 0 ? (
-        filteredConsultants.map((consultant) => (
-          <div key={consultant.id} className="card">
-            <img
-              src={consultant.imageUrl} 
-              alt={`${consultant.name} kuva`} 
-              className="consultant-image" 
-            />
-            <h3 className="consultantName">{consultant.name}</h3>
-            <p><strong>Koulutusaste:</strong> {consultant.education.degree}</p>
-            <p><strong>Koulutusohjelma:</strong> {consultant.education.program}</p>
-            <p><strong>Valmistumisvuosi:</strong> {consultant.education.graduationYear}</p>
-            <h4>Suoritetut sertifikaatit ja kurssit:</h4>
-            <ul className='noBullets'>
-              {consultant.certifications.map((cert, index) => (
-                <li key={index}>{cert}</li>
-              ))}
-            </ul>
-            <h4>Projekti- ja teknologiakokemus:</h4>
-            <ul className='noBullets'>
-              {consultant.projects.map((project, index) => (
-                <li key={index}>
-                  <strong>Projekti:</strong> {project.name}, 
-                  <strong> Teknologiat:</strong> {project.technologies.join(", ")}, 
-                  <strong> Kokemusvuodet:</strong> {project.yearsOfExperience}
-                </li>
-              ))}
-            </ul>
-            <p><strong>Työkokemuksen aloitusvuosi:</strong> {consultant.workExperience.startYear}</p>
-            <p><strong>Työkokemuksen kesto:</strong> {new Date().getFullYear() - consultant.workExperience.startYear} vuotta</p>
-            <button className="edit-button" onClick={() => handleEdit(consultant)}>
-  Muokkaa
-</button>
-          </div>
-        ))
-        ): (
-          <p className="noResults">Ei hakuehtoja vastaavia tuloksia.</p>
-        )}
-  </div>
+      ) : filteredConsultants.length > 0 ? (
+        filteredConsultants.map((consultant) => {
+          const isExpanded = expandedConsultants.includes(consultant.id);
+          return (
+            <div key={consultant.id} className="card">
+              <img
+                src={consultant.imageUrl} 
+                alt={`${consultant.name} kuva`} 
+                className="consultant-image" 
+              />
+              <h3 className="consultantName">{consultant.name}</h3>
+              <p><strong>Koulutusaste:</strong> {consultant.education.degree}</p>
+              <p><strong>Koulutusohjelma:</strong> {consultant.education.program}</p>
+              <p><strong>Valmistumisvuosi:</strong> {consultant.education.graduationYear}</p>
+              
+              {isExpanded && (
+                <>
+                  <h4>Suoritetut sertifikaatit ja kurssit:</h4>
+                  <ul className="noBullets">
+                    {consultant.certifications.map((cert, index) => (
+                      <li key={index}>{cert}</li>
+                    ))}
+                  </ul>
+                  <h4>Projekti- ja teknologiakokemus:</h4>
+                  <ul className="noBullets">
+                    {consultant.projects.map((project, index) => (
+                      <li key={index}>
+                        <strong>Projekti:</strong> {project.name}, 
+                        <strong> Teknologiat:</strong> {project.technologies.join(", ")}, 
+                        <strong> Kokemusvuodet:</strong> {project.yearsOfExperience}
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+
+              <p><strong>Työkokemuksen aloitusvuosi:</strong> {consultant.workExperience.startYear}</p>
+              <p><strong>Työkokemuksen kesto:</strong> {new Date().getFullYear() - consultant.workExperience.startYear} vuotta</p>
+              <button className="edit-button" onClick={() => handleEdit(consultant)}>
+                Muokkaa
+              </button>
+              <button
+                className="toggle-button"
+                onClick={() => toggleExpand(consultant.id)}
+              >
+                {expandedConsultants[consultant.id] ? "Näytä vähemmän" : "Näytä lisää"}
+                </button>
+            </div>
+          );
+        })
+      ) : (
+        <p className="noResults">Ei hakuehtoja vastaavia tuloksia.</p>
+      )}
+    </div>
   );
 };
-  export default ConsultantList;
+
+export default ConsultantList;
