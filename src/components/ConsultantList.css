@@ -51,11 +51,14 @@
   border: 1px solid #ddd;
   border-radius: 12px; /* Pehmeämmät kulmat */
   padding: 20px;
-  margin-bottom: 20px;
+  margin: 20px auto; /* Auto-keskitys */
   background-color: white; /* Kirkas taustaväri */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
   transition: transform 0.3s ease, box-shadow 0.3s ease; 
+  width: 80%; /* Kortin leveyden pienennys */
+  max-width: 550px; /* Maksimileveys */
 }
+
 
 .card:hover {
   transform: translateY(-5px); /* Kortti nousee hieman hoverissa */
@@ -136,4 +139,31 @@ button.edit-button:active {
 .heading:focus {
   outline: none; 
   border-bottom: 3px solid #e30059; 
+}
+
+.toggle-button {
+  background-color: #e30059; /* Taustaväri */
+  color: #fff; /* Valkoinen teksti */
+  padding: 10px 15px; /* Lisää tilaa */
+  border: 1px solid #ddd; /* Hieman vaaleampi reunus */
+  border-radius: 8px; /* Pyöristetyt kulmat */
+  cursor: pointer; /* Klikattava osoitin */
+  font-size: 16px; /* Mukautettu fonttikoko */
+  font-weight: 600; /* Lihavampi teksti */
+  transition: background-color 0.3s ease, transform 0.2s ease, border-color 0.3s ease; /* Siirtymäefektit */
+}
+
+.toggle-button:hover {
+  background-color: #bf0048; /* Hover-tilan tumma väri */
+  border-color: #e30059; /* Muuttuva reunusväri hoverissa */
+  transform: scale(1.05); /* Hieman suurempi hover-tilassa */
+}
+
+.toggle-button:active {
+  transform: scale(1); /* Palaa normaaliksi klikkauksen jälkeen */
+}
+
+.toggle-button:focus {
+  outline: none; /* Poistaa oletusfokuksen */
+  border-color: #e30059; /* Fokustilassa muuttuva reunus */
 }

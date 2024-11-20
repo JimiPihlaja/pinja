@@ -174,12 +174,12 @@ const ConsultantList = () => {
                 className="consultant-image" 
               />
               <h3 className="consultantName">{consultant.name}</h3>
-              <p><strong>Koulutusaste:</strong> {consultant.education.degree}</p>
               <p><strong>Koulutusohjelma:</strong> {consultant.education.program}</p>
-              <p><strong>Valmistumisvuosi:</strong> {consultant.education.graduationYear}</p>
               
               {isExpanded && (
                 <>
+                  <p><strong>Koulutusaste:</strong> {consultant.education.degree}</p>
+                  <p><strong>Valmistumisvuosi:</strong> {consultant.education.graduationYear}</p>
                   <h4>Suoritetut sertifikaatit ja kurssit:</h4>
                   <ul className="noBullets">
                     {consultant.certifications.map((cert, index) => (
@@ -196,10 +196,10 @@ const ConsultantList = () => {
                       </li>
                     ))}
                   </ul>
+                  <p><strong>Työkokemuksen aloitusvuosi:</strong> {consultant.workExperience.startYear}</p>
                 </>
               )}
 
-              <p><strong>Työkokemuksen aloitusvuosi:</strong> {consultant.workExperience.startYear}</p>
               <p><strong>Työkokemuksen kesto:</strong> {new Date().getFullYear() - consultant.workExperience.startYear} vuotta</p>
               <button className="edit-button" onClick={() => handleEdit(consultant)}>
                 Muokkaa
@@ -208,8 +208,8 @@ const ConsultantList = () => {
                 className="toggle-button"
                 onClick={() => toggleExpand(consultant.id)}
               >
-                {expandedConsultants[consultant.id] ? "Näytä vähemmän" : "Näytä lisää"}
-                </button>
+                {isExpanded ? "Näytä vähemmän" : "Näytä lisää"}
+              </button>
             </div>
           );
         })
