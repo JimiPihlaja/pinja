@@ -33,7 +33,8 @@ const initialConsultants = [
       { name: "E-commerce Development", technologies: ["Shopify", "JavaScript"], yearsOfExperience: 4 },
       { name: "Data Analysis", technologies: ["Python", "SQL"], yearsOfExperience: 3 }
     ],
-    workExperience: { startYear: 2016 }
+    workExperience: { startYear: 2016 },
+    imageUrl: "/CVkuvat/template2.jpg"
   },
   {
     id: 3,
@@ -48,14 +49,15 @@ const initialConsultants = [
       { name: "Infrastructure Automation", technologies: ["Terraform", "Ansible"], yearsOfExperience: 5 },
       { name: "Cloud Migrations", technologies: ["AWS", "Azure"], yearsOfExperience: 4 }
     ],
-    workExperience: { startYear: 2015 }
+    workExperience: { startYear: 2015 },
+    imageUrl: "/CVkuvat/template3.jpg"
   },
   {
     id: 4,
     name: "Anna Korhonen",
     education: {
       degree: "Kandidaatti",
-      program: "Käyttäytymistieteet",
+      program: "Viestintätieteet",
       graduationYear: 2017
     },
     certifications: ["Certified UX Designer", "Human-Computer Interaction"],
@@ -63,13 +65,14 @@ const initialConsultants = [
       { name: "User Research", technologies: ["Figma", "Sketch"], yearsOfExperience: 3 },
       { name: "Usability Testing", technologies: ["UserTesting", "Lookback"], yearsOfExperience: 2 }
     ],
-    workExperience: { startYear: 2017 }
+    workExperience: { startYear: 2017 },
+    imageUrl: "/CVkuvat/template5.jpg"
   },
   {
     id: 5,
-    name: "Pekka Saarinen",
+    name: "Tauski Nieminen",
     education: {
-      degree: "FM",
+      degree: "Tradenomi",
       program: "Tietojenkäsittelytiede",
       graduationYear: 2020
     },
@@ -78,7 +81,8 @@ const initialConsultants = [
       { name: "Backend Development", technologies: ["Java", "Spring Boot"], yearsOfExperience: 2 },
       { name: "Data Engineering", technologies: ["Apache Spark", "Kafka"], yearsOfExperience: 1 }
     ],
-    workExperience: { startYear: 2020 }
+    workExperience: { startYear: 2020 },
+    imageUrl: "/CVkuvat/template4.jpg"
   }
 ];
 
