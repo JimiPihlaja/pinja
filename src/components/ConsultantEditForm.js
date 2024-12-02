@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import './ConsultantEditForms.css';
 
-const ConsultantEditForm = ({ consultant, onSave, onCancel }) => {
+const ConsultantEditForm = ({ consultant, onSave, onCancel, user }) => {
+  // Varmista, että käyttäjällä on oikeudet muokata tietoja
+  if (user.role === 'consultant' && user.id !== consultant.id) {
+    return <p>Sinulla ei ole oikeuksia muokata tämän konsultin tietoja.</p>;
+  }
+
   const [formData, setFormData] = useState({ ...consultant });
 
   const handleChange = (field, value) => {
@@ -23,7 +28,7 @@ const ConsultantEditForm = ({ consultant, onSave, onCancel }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave(formData); // Save the updated consultant data
+    onSave(formData); // Tallentaa muokatut tiedot
   };
 
   return (

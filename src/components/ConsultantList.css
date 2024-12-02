@@ -1,9 +1,11 @@
+/* Container tyylit */
 .container {
   padding: 20px;
   max-width: 1000px; /* Suurempi leveys antaa enemmän tilaa */
   margin: 0 auto;
 }
 
+/* Haku säiliö */
 .searchContainer {
   display: flex;
   gap: 10px;
@@ -11,6 +13,7 @@
   justify-content: center;
 }
 
+/* Syöttökenttä tyylit */
 .input {
   padding: 10px; /* Lisää tilaa syötteelle */
   border-radius: 8px; /* Pyöristetyt kulmat */
@@ -24,6 +27,8 @@
   border-color: #e30059; /* Reunan väri muuttuu, kun kenttä on fokusoitu */
   outline: none; /* Poistaa oletuskehykset */
 }
+
+/* Konsultin kuva */
 .consultant-image {
   width: 100px;
   height: 100px;
@@ -31,22 +36,37 @@
   object-fit: cover;
   margin-bottom: 10px;
 }
+
+/* Toggle-button tyylit (yhdistetty) */
 .toggle-button {
-  background-color: #e30059;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1em;
-    text-align: center;
-    transition: background-color 0.3s ease;
+  background-color: #e30059; /* Taustaväri */
+  color: #fff; /* Valkoinen teksti */
+  padding: 10px 15px; /* Lisää tilaa */
+  border: 1px solid #ddd; /* Hieman vaaleampi reunus */
+  border-radius: 8px; /* Pyöristetyt kulmat */
+  cursor: pointer; /* Klikattava osoitin */
+  font-size: 16px; /* Mukautettu fonttikoko */
+  font-weight: 600; /* Lihavampi teksti */
+  text-align: center;
+  transition: background-color 0.3s ease, transform 0.2s ease, border-color 0.3s ease; /* Siirtymäefektit */
 }
 
 .toggle-button:hover {
-    background-color: #bf0048;
+  background-color: #bf0048; /* Hover-tilan tumma väri */
+  border-color: #e30059; /* Muuttuva reunusväri hoverissa */
+  transform: scale(1.05); /* Hieman suurempi hover-tilassa */
 }
 
+.toggle-button:active {
+  transform: scale(1); /* Palaa normaaliksi klikkauksen jälkeen */
+}
+
+.toggle-button:focus {
+  outline: none; /* Poistaa oletusfokuksen */
+  border-color: #e30059; /* Fokustilassa muuttuva reunus */
+}
+
+/* Kortin tyylit */
 .card {
   border: 1px solid #ddd;
   border-radius: 12px; /* Pehmeämmät kulmat */
@@ -59,12 +79,12 @@
   max-width: 550px; /* Maksimileveys */
 }
 
-
 .card:hover {
   transform: translateY(-5px); /* Kortti nousee hieman hoverissa */
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Varjo kirkastuu hover-tilassa */
 }
 
+/* Konsultin nimi */
 .consultantName {
   color: #e30059; /* Pinja väri */
   font-size: 20px; 
@@ -72,12 +92,14 @@
   margin-bottom: 10px; /* Lisää tilaa nimen ja muun sisällön väliin */
 }
 
+/* H4 otsikko */
 h4 {
   font-size: 16px; 
   color: #333; /* Tumma väri, jotta ne erottuvat */
   margin-top: 15px; /* Väli alaotsikon ja sisällön välillä */
 }
 
+/* Poistaa luettelomerkit */
 ul.noBullets {
   list-style-type: none; /* Poistaa luettelomerkit */
   padding-left: 0;
@@ -87,6 +109,7 @@ ul.noBullets li {
   margin-bottom: 8px; 
 }
 
+/* Edit-painikkeen tyylit */
 button.edit-button {
   background-color: #e30059; 
   color: white; 
@@ -108,15 +131,19 @@ button.edit-button:active {
   transform: scale(1); 
 }
 
-  
-  .noResults {
-    text-align: center;
-    color: #666;
-  }
+/* Viesti jos ei löytynyt tuloksia */
+.noResults {
+  text-align: center;
+  color: #666;
+}
+
+/* Poistaa luettelomerkit */
 .noBullets {
   list-style-type: none;
   padding: 0;
 }
+
+/* Otsikko tyylit */
 .heading {
   color: #e30059; 
   font-style: italic; 
@@ -139,31 +166,4 @@ button.edit-button:active {
 .heading:focus {
   outline: none; 
   border-bottom: 3px solid #e30059; 
-}
-
-.toggle-button {
-  background-color: #e30059; /* Taustaväri */
-  color: #fff; /* Valkoinen teksti */
-  padding: 10px 15px; /* Lisää tilaa */
-  border: 1px solid #ddd; /* Hieman vaaleampi reunus */
-  border-radius: 8px; /* Pyöristetyt kulmat */
-  cursor: pointer; /* Klikattava osoitin */
-  font-size: 16px; /* Mukautettu fonttikoko */
-  font-weight: 600; /* Lihavampi teksti */
-  transition: background-color 0.3s ease, transform 0.2s ease, border-color 0.3s ease; /* Siirtymäefektit */
-}
-
-.toggle-button:hover {
-  background-color: #bf0048; /* Hover-tilan tumma väri */
-  border-color: #e30059; /* Muuttuva reunusväri hoverissa */
-  transform: scale(1.05); /* Hieman suurempi hover-tilassa */
-}
-
-.toggle-button:active {
-  transform: scale(1); /* Palaa normaaliksi klikkauksen jälkeen */
-}
-
-.toggle-button:focus {
-  outline: none; /* Poistaa oletusfokuksen */
-  border-color: #e30059; /* Fokustilassa muuttuva reunus */
 }

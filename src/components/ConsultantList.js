@@ -85,7 +85,7 @@ const initialConsultants = [
     imageUrl: "/CVkuvat/template4.jpg"
   }
 ];
-const ConsultantList = () => {
+const ConsultantList = ({ user }) => { // user tulee nyt propsista
   const [consultants, setConsultants] = useState(() => {
     const savedData = localStorage.getItem('consultants');
     return savedData ? JSON.parse(savedData) : initialConsultants;
@@ -98,38 +98,37 @@ const ConsultantList = () => {
   const [expandedConsultants, setExpandedConsultants] = useState([]);
 
   useEffect(() => {
-    localStorage.setItem('consultants', JSON.stringify(consultants));
-  }, [consultants]);
+    let filtered = consultants;
 
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (!searchTerm && !experienceFilter) {
-        setFilteredConsultants(initialConsultants);
-        return;
-      }
+    if (user.role === 'consultant') {
+      // Konsultti näkee vain omat tietonsa
+      filtered = consultants.filter(consultant => consultant.id === user.id);
+    }
 
-      const filtered = consultants.filter((consultant) => {
+    if (searchTerm || experienceFilter) {
+      filtered = filtered.filter((consultant) => {
         const experienceYears = new Date().getFullYear() - consultant.workExperience.startYear;
-        const matchesEducation = !searchTerm || consultant.education.program
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase());
+        const matchesEducation = !searchTerm || consultant.education.program.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesExperience = !experienceFilter || experienceYears >= parseInt(experienceFilter, 10);
-
         return matchesEducation && matchesExperience;
       });
-      setFilteredConsultants(filtered);
-    }, 300); // 300 ms debounce
+    }
 
-    return () => clearTimeout(timeoutId);
-  }, [searchTerm, experienceFilter, consultants]);
+    setFilteredConsultants(filtered);
+
+  }, [consultants, user, searchTerm, experienceFilter]);
 
   const handleEdit = (consultant) => {
-    setEditingConsultant(consultant);
+    if (user.role === 'admin' || consultant.id === user.id) {
+      setEditingConsultant(consultant);
+    } else {
+      alert('Sinulla ei ole oikeuksia muokata tämän konsultin tietoja.');
+    }
   };
 
   const handleSave = (updatedConsultant) => {
-    setConsultants((prevConsultants) =>
-      prevConsultants.map((consultant) =>
+    setConsultants(prevConsultants =>
+      prevConsultants.map(consultant =>
         consultant.id === updatedConsultant.id ? updatedConsultant : consultant
       )
     );
@@ -141,8 +140,8 @@ const ConsultantList = () => {
   };
 
   const toggleExpand = (id) => {
-    setExpandedConsultants((prev) =>
-      prev.includes(id) ? prev.filter((consultantId) => consultantId !== id) : [...prev, id]
+    setExpandedConsultants(prev =>
+      prev.includes(id) ? prev.filter(consultantId => consultantId !== id) : [...prev, id]
     );
   };
 
@@ -150,18 +149,14 @@ const ConsultantList = () => {
     <div className="container">
       <h2 className="heading">Meidän Konsulttimme</h2>
 
-      <SearchBar
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        experienceFilter={experienceFilter}
-        setExperienceFilter={setExperienceFilter}
-      />
+     
 
       {editingConsultant ? (
         <ConsultantEditForm
           consultant={editingConsultant}
           onSave={handleSave}
           onCancel={handleCancel}
+          user={user}
         />
       ) : filteredConsultants.length > 0 ? (
         filteredConsultants.map((consultant) => {

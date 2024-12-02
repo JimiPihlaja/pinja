@@ -1,45 +1,45 @@
 .header {
-    background-color: #e30059;
-    padding: 20px;
-    color: white;
-    text-align: center;
-  }
-  
-  
-  
-  .nav {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center; 
-    gap: 20px; 
-    
-  }
-  
-  .navLink {
-    color: white; 
-    text-decoration: none; 
-    font-weight: bold;
-    font-size: 18px; 
-    text-transform: uppercase; 
-    padding: 10px 20px;
-    border: 1px solid white;
-    border-radius: 20px; 
-    transition: background-color 0.3s ease, transform 0.3s ease-in-out; 
-  }
-  
-  .navLink:hover {
-    background-color: #e30059; 
-    color: #fff; 
-    transform: scale(1.1); 
-  }
-  
-  .navLink:active {
-    transform: scale(1.05); 
-  }
-  .logo{
-    height: 60px;
-    width: auto;
-  align-items: center;
-  margin-top: 0px;
-  }
-  
+  background-color: #e30059;
+  padding: 20px;
+  color: white;
+  display: flex; /* Käytetään Flexboxia */
+  justify-content: center; /* Keskittää kaikki elementit vaakasuunnassa */
+  align-items: center; /* Keskittää kaikki elementit pystysuunnassa */
+  position: relative; /* Lisätään position: relative, jotta voimme kohdistaa navin erikseen */
+}
+
+.logo {
+  height: 60px;
+  width: auto;
+}
+
+.nav {
+  display: flex;
+  gap: 20px;
+  justify-content: flex-start; /* Vasemmalle kohdistus */
+  position: absolute; /* Asettaa navigoinnin erilleen */
+  left: 0; /* Kohdistaa navigointilinkit vasemmalle */
+  margin-left: 20px; /* Lisää väli vasemmalle, jotta ei ole liian lähellä reunaa */
+}
+
+.navLink {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 18px;
+  text-transform: uppercase;
+  padding: 10px 20px;
+  border: 1px solid white;
+  border-radius: 20px;
+  transition: background-color 0.3s ease, transform 0.3s ease-in-out;
+}
+
+.navLink:hover {
+  background-color: #e30059;
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.navLink:active {
+  transform: scale(1.05);
+}
