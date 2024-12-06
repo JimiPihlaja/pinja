@@ -167,3 +167,49 @@ button.edit-button:active {
   outline: none; 
   border-bottom: 3px solid #e30059; 
 }
+
+/* Tyylitelty checkbox */
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.checkbox-container label {
+  margin-left: 8px;
+  font-size: 16px;
+  color: #333;
+}
+
+.checkbox-container input[type="checkbox"] {
+  appearance: none;
+  width: 40px;
+  height: 20px;
+  background: #ddd;
+  border-radius: 50px;
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  transition: background 0.3s ease;
+}
+
+.checkbox-container input[type="checkbox"]:checked {
+  background: #4caf50; /* Vihreä taustaväri valittuna */
+}
+
+.checkbox-container input[type="checkbox"]::before {
+  content: '';
+  width: 18px;
+  height: 18px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  transition: transform 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.checkbox-container input[type="checkbox"]:checked::before {
+  transform: translateX(20px);
+}

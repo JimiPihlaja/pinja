@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ConsultantEditForm from './ConsultantEditForm';
 import './ConsultantList.css';
 import SearchBar from './SearchBar';
+import jsPDF from 'jspdf';
 
 const initialConsultants = [
   {
@@ -85,7 +86,7 @@ const initialConsultants = [
     imageUrl: "/CVkuvat/template4.jpg"
   }
 ];
-const ConsultantList = ({ user }) => { // user tulee nyt propsista
+const ConsultantList = ({ user }) => {
   const [consultants, setConsultants] = useState(() => {
     const savedData = localStorage.getItem('consultants');
     return savedData ? JSON.parse(savedData) : initialConsultants;
@@ -96,13 +97,13 @@ const ConsultantList = ({ user }) => { // user tulee nyt propsista
   const [searchTerm, setSearchTerm] = useState('');
   const [experienceFilter, setExperienceFilter] = useState('');
   const [expandedConsultants, setExpandedConsultants] = useState([]);
+  const [selectedConsultants, setSelectedConsultants] = useState([]); // Alustetaan tila!
 
   useEffect(() => {
     let filtered = consultants;
 
     if (user.role === 'consultant') {
-      // Konsultti näkee vain omat tietonsa
-      filtered = consultants.filter(consultant => consultant.id === user.id);
+      filtered = consultants.filter((consultant) => consultant.id === user.id);
     }
 
     if (searchTerm || experienceFilter) {
@@ -115,7 +116,6 @@ const ConsultantList = ({ user }) => { // user tulee nyt propsista
     }
 
     setFilteredConsultants(filtered);
-
   }, [consultants, user, searchTerm, experienceFilter]);
 
   const handleEdit = (consultant) => {
@@ -127,8 +127,8 @@ const ConsultantList = ({ user }) => { // user tulee nyt propsista
   };
 
   const handleSave = (updatedConsultant) => {
-    setConsultants(prevConsultants =>
-      prevConsultants.map(consultant =>
+    setConsultants((prevConsultants) =>
+      prevConsultants.map((consultant) =>
         consultant.id === updatedConsultant.id ? updatedConsultant : consultant
       )
     );
@@ -140,16 +140,45 @@ const ConsultantList = ({ user }) => { // user tulee nyt propsista
   };
 
   const toggleExpand = (id) => {
-    setExpandedConsultants(prev =>
-      prev.includes(id) ? prev.filter(consultantId => consultantId !== id) : [...prev, id]
+    setExpandedConsultants((prev) =>
+      prev.includes(id) ? prev.filter((consultantId) => consultantId !== id) : [...prev, id]
     );
+  };
+
+  const handleCheckboxChange = (id) => {
+    setSelectedConsultants((prev) =>
+      prev.includes(id) ? prev.filter((selectedId) => selectedId !== id) : [...prev, id]
+    );
+  };
+
+  const generatePDF = (consultantsToPrint) => {
+    const pdf = new jsPDF();
+    consultantsToPrint.forEach((consultant, index) => {
+      if (index > 0) pdf.addPage(); // Lisää uusi sivu jokaisen konsultin väliin
+      pdf.text(`Nimi: ${consultant.name}`, 10, 10);
+      pdf.text(`Koulutusaste: ${consultant.education.degree}`, 10, 20);
+      pdf.text(`Ohjelma: ${consultant.education.program}`, 10, 30);
+      pdf.text(`Valmistumisvuosi: ${consultant.education.graduationYear}`, 10, 40);
+      pdf.text(`Työkokemus vuodesta: ${consultant.workExperience.startYear}`, 10, 50);
+      pdf.text(`Sertifikaatit: ${consultant.certifications.join(', ')}`, 10, 60);
+    });
+    pdf.save('Consultants.pdf');
+  };
+
+  const handleSingleCVPrint = (consultant) => {
+    generatePDF([consultant]);
+  };
+
+  const handleMultipleCVPrint = () => {
+    const consultantsToPrint = consultants.filter((consultant) =>
+      selectedConsultants.includes(consultant.id)
+    );
+    generatePDF(consultantsToPrint);
   };
 
   return (
     <div className="container">
       <h2 className="heading">Meidän Konsulttimme</h2>
-
-     
 
       {editingConsultant ? (
         <ConsultantEditForm
@@ -163,14 +192,24 @@ const ConsultantList = ({ user }) => { // user tulee nyt propsista
           const isExpanded = expandedConsultants.includes(consultant.id);
           return (
             <div key={consultant.id} className="card">
+              {user.role === 'admin' && (
+                <div className="checkbox-container">
+                <input
+                  type="checkbox"
+                  id={`select-${consultant.id}`}
+                  onChange={() => handleCheckboxChange(consultant.id)}
+                  checked={selectedConsultants.includes(consultant.id)} // Käytä tila!
+                />
+                <label htmlFor={`select-${consultant.id}`}>Valitse</label>
+                </div>
+              )}
               <img
-                src={consultant.imageUrl} 
-                alt={`${consultant.name} kuva`} 
-                className="consultant-image" 
+                src={consultant.imageUrl}
+                alt={`${consultant.name} kuva`}
+                className="consultant-image"
               />
               <h3 className="consultantName">{consultant.name}</h3>
               <p><strong>Koulutusohjelma:</strong> {consultant.education.program}</p>
-              
               {isExpanded && (
                 <>
                   <p><strong>Koulutusaste:</strong> {consultant.education.degree}</p>
@@ -181,35 +220,32 @@ const ConsultantList = ({ user }) => { // user tulee nyt propsista
                       <li key={index}>{cert}</li>
                     ))}
                   </ul>
-                  <h4>Projekti- ja teknologiakokemus:</h4>
-                  <ul className="noBullets">
-                    {consultant.projects.map((project, index) => (
-                      <li key={index}>
-                        <strong>Projekti:</strong> {project.name}, 
-                        <strong> Teknologiat:</strong> {project.technologies.join(", ")}, 
-                        <strong> Kokemusvuodet:</strong> {project.yearsOfExperience}
-                      </li>
-                    ))}
-                  </ul>
-                  <p><strong>Työkokemuksen aloitusvuosi:</strong> {consultant.workExperience.startYear}</p>
                 </>
               )}
-
               <p><strong>Työkokemuksen kesto:</strong> {new Date().getFullYear() - consultant.workExperience.startYear} vuotta</p>
               <button className="edit-button" onClick={() => handleEdit(consultant)}>
                 Muokkaa
+              </button>
+              <button onClick={() => handleSingleCVPrint(consultant)}>
+                Tulosta {consultant.name}:n CV
               </button>
               <button
                 className="toggle-button"
                 onClick={() => toggleExpand(consultant.id)}
               >
-                {isExpanded ? "Näytä vähemmän" : "Näytä lisää"}
+                {isExpanded ? 'Näytä vähemmän' : 'Näytä lisää'}
               </button>
             </div>
           );
         })
       ) : (
         <p className="noResults">Ei hakuehtoja vastaavia tuloksia.</p>
+      )}
+
+      {user.role === 'admin' && (
+        <button onClick={handleMultipleCVPrint}>
+          Tulosta valittujen konsulttien CV:t
+        </button>
       )}
     </div>
   );
