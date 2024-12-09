@@ -10,8 +10,12 @@ const Login = ({ onLogin }) => {
   const handleLogin = () => {
     // Dummy käyttäjät
     const dummyUsers = [
-      { id: 1, username: 'admin', password: 'admin123', role: 'admin' },
-      { id: 2, username: 'Konsultantti', password: 'Konsultantti1', role: 'consultant' },
+      { id: 1, username: 'Matti', password: 'Matti1', role: 'consultant' },
+      { id: 2, username: 'Liisa', password: 'Liisa1', role: 'consultant' },
+      { id: 3, username: 'Teemu', password: 'Teemu1', role: 'consultant' },
+      { id: 4, username: 'Anna', password: 'Anna1', role: 'consultant' },
+      { id: 5, username: 'Pekka', password: 'Pekka1', role: 'consultant' },
+      { id: 6, username: 'admin', password: 'admin123', role: 'admin' },
     ];
 
     // Etsitään oikea käyttäjä
