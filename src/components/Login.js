@@ -47,6 +47,7 @@ const Login = ({ onLogin }) => {
       <option value="admin">Admin</option>
     </select>
     <button onClick={handleLogin}>Kirjaudu</button>
+    {errorMessage && <p className="error-message">{errorMessage}</p>}
   </div>
 );
 };
