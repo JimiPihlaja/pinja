@@ -1,32 +1,16 @@
 /* Container tyylit */
 .container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
   padding: 20px;
   max-width: 1000px; /* Suurempi leveys antaa enemmän tilaa */
   margin: 0 auto;
 }
 
-/* Haku säiliö */
-.searchContainer {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-  justify-content: center;
-}
 
-/* Syöttökenttä tyylit */
-.input {
-  padding: 10px; /* Lisää tilaa syötteelle */
-  border-radius: 8px; /* Pyöristetyt kulmat */
-  border: 1px solid #ddd; /* Hieman vaaleampi reunus */
-  width: 250px;
-  font-size: 16px; /* Mukautettu fonttikoko */
-  transition: border-color 0.3s ease; /* Reunan väri muuttuu hoverissa */
-}
 
-.input:focus {
-  border-color: #e30059; /* Reunan väri muuttuu, kun kenttä on fokusoitu */
-  outline: none; /* Poistaa oletuskehykset */
-}
 
 /* Konsultin kuva */
 .consultant-image {
@@ -68,15 +52,14 @@
 
 /* Kortin tyylit */
 .card {
+  flex: 1 1 calc(33.333% - 32px); /* Kolmasosa rivistä miinus gap */
+  max-width: calc(33.333% - 32px); /* Maksimikoko varmistaa oikean leveyden */
   border: 1px solid #ddd;
   border-radius: 12px; /* Pehmeämmät kulmat */
   padding: 20px;
-  margin: 20px auto; /* Auto-keskitys */
   background-color: white; /* Kirkas taustaväri */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
   transition: transform 0.3s ease, box-shadow 0.3s ease; 
-  width: 80%; /* Kortin leveyden pienennys */
-  max-width: 550px; /* Maksimileveys */
 }
 
 .card:hover {
@@ -145,6 +128,8 @@ button.edit-button:active {
 
 /* Otsikko tyylit */
 .heading {
+  flex-basis: 100%;
+  order: -1; 
   color: #e30059; 
   font-style: italic; 
   font-weight: 900; 
@@ -154,7 +139,6 @@ button.edit-button:active {
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); 
   line-height: 1.2; 
   transition: all 0.3s ease; 
-  margin-bottom: 3%;
 }
 
 .heading:hover {
@@ -212,4 +196,17 @@ button.edit-button:active {
 
 .checkbox-container input[type="checkbox"]:checked::before {
   transform: translateX(20px);
+}
+@media (max-width: 768px) {
+  .card {
+    flex: 1 1 calc(50% - 16px); /* Kaksi korttia per rivi pienillä näytöillä */
+    max-width: calc(50% - 16px); /* Maksimikoko sama kuin flex-arvo */
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    flex: 1 1 100%; /* Yksi kortti per rivi erittäin pienillä näytöillä */
+    max-width: 100%;
+  }
 }

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ConsultantEditForm from './ConsultantEditForm';
 import './ConsultantList.css';
-import SearchBar from './SearchBar';
 import jsPDF from 'jspdf';
 
 const initialConsultants = [
@@ -86,7 +85,7 @@ const initialConsultants = [
     imageUrl: "/CVkuvat/template4.jpg"
   }
 ];
-const ConsultantList = ({ user }) => {
+const ConsultantList = ({ user, searchTerm, experienceFilter }) => {
   const [consultants, setConsultants] = useState(() => {
     const savedData = localStorage.getItem('consultants');
     return savedData ? JSON.parse(savedData) : initialConsultants;
@@ -94,8 +93,6 @@ const ConsultantList = ({ user }) => {
 
   const [editingConsultant, setEditingConsultant] = useState(null);
   const [filteredConsultants, setFilteredConsultants] = useState(consultants);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [experienceFilter, setExperienceFilter] = useState('');
   const [expandedConsultants, setExpandedConsultants] = useState([]);
   const [selectedConsultants, setSelectedConsultants] = useState([]); // Alustetaan tila!
 
