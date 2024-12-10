@@ -1,35 +1,41 @@
 .searchContainer {
-    display: flex; /* Muutettu inline-blockista flexboxiin */
-    justify-content: center; /* Keskittää elementit */
-    align-items: center; 
-    gap: 20px;
-    margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap; /* Sallii rivittymisen, jos näytön tila ei riitä */
+  justify-content: center; /* Keskittää sisällön horisontaalisesti */
+  align-items: center; /* Keskittää sisällön vertikaalisesti */
+  gap: 10px; /* Asettaa väliä laatikoiden väliin */
+  margin: 20px auto; /* Keskittää containerin pystysuunnassa */
+  padding: 20px; /* Lisää sisäistä marginaalia containerin sisälle */
+  background-color: #f9f9f9; /* Vaalea taustaväri */
+  border: 2px solid #e30059; /* Vaaleanpunainen reunaviiva */
+  border-radius: 20px; /* Pyöristetyt kulmat */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hieno varjo */
+  max-width: 600px; /* Rajoittaa containerin leveyden */
+}
+
+.input {
+  padding: 12px 20px;
+  font-size: 16px;
+  border: 2px solid #e30059;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  width: calc(50% - 20px); /* Käytetään 50% tilaa välien kanssa */
+  box-sizing: border-box;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #e30059;
+  box-shadow: 0 0 8px rgba(227, 0, 89, 0.5);
+}
+
+@media (max-width: 600px) {
+  .searchContainer {
+    flex-direction: column; /* Laatikot allekkain pienillä näytöillä */
+    align-items: stretch; /* Venyttää laatikot koko containerin leveydelle */
   }
-  
+
   .input {
-    padding: 12px 20px; 
-    font-size: 16px;
-    border: 2px solid #e30059; 
-    border-radius: 50px; 
-    transition: all 0.3s ease;
-    width: 300px; 
-    box-sizing: border-box; 
+    width: 100%; /* Leveämmät laatikot pienillä näytöillä */
   }
-  
-  .input:focus {
-    outline: none; 
-    border-color: #e30059; 
-    box-shadow: 0 0 8px rgba(227, 0, 89, 0.5); 
-  }
-  
-  @media (max-width: 600px) {
-    .searchContainer {
-      flex-direction: column; /* Yksi alla toisen sijaan pienillä näytöillä */
-      align-items: stretch; /* Venyttää elementtejä koko leveydelle */
-    }
-  
-    .input {
-      width: 100%; 
-    }
-  }
-  
+}

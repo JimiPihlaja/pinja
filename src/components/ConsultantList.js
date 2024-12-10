@@ -3,6 +3,7 @@ import ConsultantEditForm from './ConsultantEditForm';
 import './ConsultantList.css';
 import jsPDF from 'jspdf';
 
+// Alustavat konsulttitiedot, jotka näytetään sovelluksen käynnistyessä, jos paikallista dataa ei ole tallennettu.
 const initialConsultants = [
   {
     id: 1,
@@ -85,36 +86,53 @@ const initialConsultants = [
     imageUrl: "/CVkuvat/template4.jpg"
   }
 ];
-const ConsultantList = ({ user, searchTerm, experienceFilter }) => {
+const ConsultantList = ({ user, searchTerm, experienceFilter, globalFilter }) => {
+   // Konsulttidatan hallinta Reactin tilan avulla.
   const [consultants, setConsultants] = useState(() => {
+    // Ladataan paikallinen data (jos olemassa), muuten käytetään alustavaa tietoa.
     const savedData = localStorage.getItem('consultants');
     return savedData ? JSON.parse(savedData) : initialConsultants;
   });
 
-  const [editingConsultant, setEditingConsultant] = useState(null);
-  const [filteredConsultants, setFilteredConsultants] = useState(consultants);
-  const [expandedConsultants, setExpandedConsultants] = useState([]);
-  const [selectedConsultants, setSelectedConsultants] = useState([]); // Alustetaan tila!
+  const [editingConsultant, setEditingConsultant] = useState(null);  // Muokattavan konsultin tila.
+  const [filteredConsultants, setFilteredConsultants] = useState(consultants); // Hakutulokset.
+  const [expandedConsultants, setExpandedConsultants] = useState([]);// Laajennetut kortit.
+  const [selectedConsultants, setSelectedConsultants] = useState([]); // Valitut konsultit (admin-käyttö)
 
+  // Suodatetaan konsultteja hakuehtojen perusteella.
   useEffect(() => {
     let filtered = consultants;
 
     if (user.role === 'consultant') {
+      // Konsultti voi nähdä vain omat tietonsa.
       filtered = consultants.filter((consultant) => consultant.id === user.id);
     }
 
-    if (searchTerm || experienceFilter) {
+    if (searchTerm || experienceFilter || globalFilter) {
+      // Suodatetaan tiedot hakutermien ja suodattimien perusteella.
       filtered = filtered.filter((consultant) => {
         const experienceYears = new Date().getFullYear() - consultant.workExperience.startYear;
         const matchesEducation = !searchTerm || consultant.education.program.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesExperience = !experienceFilter || experienceYears >= parseInt(experienceFilter, 10);
-        return matchesEducation && matchesExperience;
+
+        const globalSearchableData = [
+          consultant.name,
+          consultant.education.degree,
+          consultant.education.program,
+          consultant.certifications.join(', '),
+          consultant.projects.map((project) => project.name).join(', '),
+        ].join(' ').toLowerCase();
+  
+        const matchesGlobalFilter = !globalFilter || globalSearchableData.includes(globalFilter.toLowerCase());
+
+        return matchesEducation && matchesExperience && matchesGlobalFilter;
       });
     }
 
-    setFilteredConsultants(filtered);
-  }, [consultants, user, searchTerm, experienceFilter]);
+    setFilteredConsultants(filtered); // Päivitetään suodatetut tulokset.
+  }, [consultants, user, searchTerm, experienceFilter, globalFilter]);
 
+  // Käyttäjän oikeuksien mukainen muokkaus.
   const handleEdit = (consultant) => {
     if (user.role === 'admin' || consultant.id === user.id) {
       setEditingConsultant(consultant);
@@ -123,31 +141,34 @@ const ConsultantList = ({ user, searchTerm, experienceFilter }) => {
     }
   };
 
+   // Tallennetaan muokatun konsultin tiedot.
   const handleSave = (updatedConsultant) => {
     setConsultants((prevConsultants) =>
       prevConsultants.map((consultant) =>
         consultant.id === updatedConsultant.id ? updatedConsultant : consultant
       )
     );
+    setEditingConsultant(null); // sulje
+  };
+
+  const handleCancel = () => { //peruuta
     setEditingConsultant(null);
   };
 
-  const handleCancel = () => {
-    setEditingConsultant(null);
-  };
-
-  const toggleExpand = (id) => {
+  const toggleExpand = (id) => { //laajentaa
     setExpandedConsultants((prev) =>
       prev.includes(id) ? prev.filter((consultantId) => consultantId !== id) : [...prev, id]
     );
   };
 
+  // Hallitsee valintaruutujen tilaa (valitut konsultit).
   const handleCheckboxChange = (id) => {
     setSelectedConsultants((prev) =>
       prev.includes(id) ? prev.filter((selectedId) => selectedId !== id) : [...prev, id]
     );
   };
 
+// Generoi PDF-tiedoston valituista konsulteista.
   const generatePDF = (consultantsToPrint) => {
     const pdf = new jsPDF();
     consultantsToPrint.forEach((consultant, index) => {
@@ -159,18 +180,20 @@ const ConsultantList = ({ user, searchTerm, experienceFilter }) => {
       pdf.text(`Työkokemus vuodesta: ${consultant.workExperience.startYear}`, 10, 50);
       pdf.text(`Sertifikaatit: ${consultant.certifications.join(', ')}`, 10, 60);
     });
-    pdf.save('Consultants.pdf');
+    pdf.save('Consultants.pdf');// lataa PDF
   };
 
+//Yksittäisen konsultin CV tulostus
   const handleSingleCVPrint = (consultant) => {
     generatePDF([consultant]);
   };
 
+// Tulostaa valittujen konsulttien CV:t.
   const handleMultipleCVPrint = () => {
     const consultantsToPrint = consultants.filter((consultant) =>
       selectedConsultants.includes(consultant.id)
     );
-    generatePDF(consultantsToPrint);
+    generatePDF(consultantsToPrint); 
   };
 
   return (
@@ -184,12 +207,16 @@ const ConsultantList = ({ user, searchTerm, experienceFilter }) => {
           onCancel={handleCancel}
           user={user}
         />
+
+
       ) : filteredConsultants.length > 0 ? (
+        // Renderöi jokainen suodatettu konsultti.
         filteredConsultants.map((consultant) => {
           const isExpanded = expandedConsultants.includes(consultant.id);
           return (
             <div key={consultant.id} className="card">
               {user.role === 'admin' && (
+                // Valintaruutu adminille.
                 <div className="checkbox-container">
                 <input
                   type="checkbox"

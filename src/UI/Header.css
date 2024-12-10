@@ -43,3 +43,26 @@
 .navLink:active {
   transform: scale(1.05);
 }
+@media (max-width: 768px) {
+  .nav {
+    flex-direction: column; /* Linkit päällekkäin */
+    align-items: center; /* Keskittää linkit */
+    position: static; /* Poistaa absoluuttisen sijainnin */
+    margin-left: 0; /* Poistaa marginaalin */
+  }
+
+  .navLink {
+    font-size: 16px; /* Pienempi fonttikoko */
+    padding: 16px; /* Pienemmät marginaalit */
+    width: 100%; /* Venyttää linkit koko leveydelle */
+    text-align: center; /* Keskittää tekstin */
+  }
+}
+
+/* Pienemmille laitteille, kuten kännyköille */
+@media (max-width: 480px) {
+  .navLink {
+    font-size: 14px; /* Vielä pienempi fontti */
+    padding: 0px 12px;
+  }
+}
